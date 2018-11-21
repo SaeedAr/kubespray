@@ -1,0 +1,82 @@
+---
+
+- name: Install kubeshell
+  shell: >
+      pip install kube-shell
+  when: kube_shell
+
+- name: Install ingress
+  shell: >
+      {{ ingress_install_cmd }}
+  when: ingress
+
+- name: Copy nginx ingress file
+  template:
+    src: ngx-service.yml.j2
+    dest: /tmp/ngx-service.yml
+    owner: root
+    group: root
+    mode: 0644
+  when: ingress
+
+- name: Install nginx ingress service
+  shell: >
+      kubectl create -f /tmp/ngx-service.yml
+  when: ingress
+
+- name: Clone heapster monitoring repo
+  git:
+    repo: 'https://github.com/kubernetes/heapster.git'
+    dest: /opt/heapster
+    clone: yes
+  when: monitoring
+
+- name: Install heapster monitoring
+  shell: |
+      {{ heapster_install_cmd }}
+  when: monitoring
+
+#- name: copy admin acount chart
+#  template:
+#    src: charts/admin-account.yaml.j2
+#    dest: /home/ubuntu/admin-account.yaml
+#    owner: root
+#    group: root
+#    mode: 0644
+#
+#- name: copy role binding chart
+#  template:
+#    src: charts/role-binding.yaml.j2
+#    dest: /home/ubuntu/role-binding.yaml
+#    owner: root
+#    group: root
+#    mode: 0644
+
+#- name: create admin account
+#  raw:
+#    kubectl create -f /home/ubuntu/role-binding.yaml && \
+#    kubectl create -f /home/ubuntu/admin-account.yaml
+
+#- name: Install nfs server
+#  raw:
+#    apt-get update && \
+#    DEBIAN_FRONTEND=noninteractive apt-get install -y nfs-kernel-server
+
+- name: create shared dir
+  raw:
+    mkdir -p /nfs && \
+    mkdir -p /nfs/out_files && \
+    chmod -R 777 /nfs && \
+    chmod -R 777 /nfs/out_files
+
+#- name: copy nfs server config file
+#  template:
+#    src: exports.j2
+#    dest: /etc/exports
+#    owner: root
+#    group: root
+#    mode: 0644
+#
+#- name: restart nfs-server
+#  raw:
+#    service nfs-kernel-server restart

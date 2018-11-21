@@ -1,0 +1,11 @@
+---
+
+#- name: Install nfs common
+#  raw:
+#    apt-get update && \
+#    DEBIAN_FRONTEND=noninteractive apt-get install -y nfs-common
+
+#- name: create shared dir
+#  raw:
+#    mkdir -p /nfs && \
+#    chmod -R 777 /nfs

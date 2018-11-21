@@ -1,0 +1,12 @@
+---
+- hosts: nfs-master
+  roles:
+    - { role: roles/postinstall/master }
+
+- hosts: nfs-node
+  roles:
+    - { role: roles/postinstall/nodes}
+
+- hosts: kube-node
+  roles:
+    - { role: roles/postinstall/all}
