@@ -1,5 +1,5 @@
 ---
-- hosts: nfs-master
+- hosts: kube-master[0]
   roles:
     - { role: roles/postinstall/master }
 

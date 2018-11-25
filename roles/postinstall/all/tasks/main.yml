@@ -1,13 +1,26 @@
 ---
 
+- name: Docker Python Setup
+  pip:
+    name: docker
+
 - name: Docker login
-  raw:
-    docker login -u saeedare -p *****
+  docker_login:
+    username: saeedare
+    password: *****
 
-- name: docker pull image
-  raw:
-    docker pull hadib/neptunipe:0.1.14
+- name: docker pull images
+  block:
+    - docker_image:
+        name: hadib/neptunipe:0.1.22
+    - docker_image:
+        name: hadib/netinsight-unb:0.6.4
+    - docker_image:
+        name: hadib/neptune:0.3.7
 
-- name: multicast root
-  raw:
-    route add -net 239.0.0.0/8 cni0
+#- name: multicast root
+#  raw:
+#    route add -net 239.0.0.0/8 cni0
+
+#- name: Cloning ni-cicd repo
+#  git:
